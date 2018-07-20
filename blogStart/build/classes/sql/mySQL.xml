@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="li">
+	<select id="list_all" resultType="listDTO">
+		select * from list
+	</select>
+	<select id="list_one" parameterType="int" resultType="listDTO">
+		select * from list where list_num=#{list_num}
+	</select>
+	<select id="get_total" resultType="int">
+		select count(*) from list
+	</select>
+	<select id="list_rowSize" parameterType="java.util.Map" resultType="listDTO">
+		select list.* from (select @rownum := @rownum + 1 as rownum, list.* from list, (select @rownum :=0) r
+		order by list_num asc) list where list.rownum between ${startRow} and ${endRow}
+	</select>
+	<select id="list_maxNum" resultType="int">
+		select list_num from list order by list_num desc limit 1
+	</select>
+	<insert id="list_add" parameterType="listDTO">
+		insert into list values(#{list_num},#{name},#{subject},#{content},#{img},sysdate());
+	</insert>
+</mapper>
